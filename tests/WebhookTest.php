@@ -32,8 +32,9 @@ final class WebhookTest extends TestCase
 
     public function testKnownVector(): void
     {
-        // Vecteur commun à tous les SDKs FomaPay.
-        $header = 't=1700000000,v1=' . hash_hmac('sha256', '1700000000.{"id":"evt_1"}', 'whsec_test');
+        // Vecteur commun à tous les SDKs FomaPay, calculé avec OpenSSL :
+        // printf '1700000000.{"id":"evt_1"}' | openssl dgst -sha256 -hmac whsec_test
+        $header = 't=1700000000,v1=c89214b5b5da833daed6f0b8c5bb6bd58cea9022bd80ccc78230f3942d632925';
         self::assertTrue(Webhook::verify('{"id":"evt_1"}', $header, 'whsec_test', now: 1700000000));
     }
 
